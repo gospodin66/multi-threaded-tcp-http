@@ -173,6 +173,7 @@ impl User {
                 (role_id,username,email,password,config,active,remember_token,avatar,created_at,updated_at)
             VALUES
                 (:role_id,:username,:email,:password,:config,:active,:remember_token,:avatar,:created_at,:updated_at)";
+            
             // Strings are passed by reference!
             let __params = users.iter().map(|u| params!{
                 "role_id" => u.role_id,
@@ -311,6 +312,7 @@ impl Token {
                 (user_id,token_type,access_token,refresh_token,token_expire,created_at,updated_at)
             VALUES
                 (:user_id,:token_type,:access_token,:refresh_token,:token_expire,:created_at,:updated_at)";
+                
             // Strings are passed by reference!
             let __params = tokens.iter().map(|t| params! {
                 "user_id" =>  t.user_id,

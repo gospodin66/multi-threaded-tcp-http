@@ -79,13 +79,6 @@ fn init_server(ip_port: &[SocketAddr; 2]) -> Result<TcpListener, String>{
 }
 
 fn listen_for_connections(listener: &TcpListener) -> Result<(), String> {
-
-    // println!("spawning stdin thread..");
-    // let channel = thrstdin::Thr::new_thr();
-    // thrstdin::Thr::listen_channel(channel.rx);
-
-    //thrstdin::init_thread().unwrap();
-
     match threadpool::handle_in_threadpool(&listener) {
         Ok(()) => {
             println!("Worker finsihed the job successfuly.");

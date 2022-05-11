@@ -13,9 +13,7 @@ use std::os::unix::fs::OpenOptionsExt;
  */
 pub fn create(path: &String) -> std::io::Result<()>{
     if fs::metadata(path).is_ok() {
-        let msg = "File already exists!";
-        // println!("{}", msg);
-        return Err(std::io::Error::new(std::io::ErrorKind::Other,msg))
+        return Err(std::io::Error::new(std::io::ErrorKind::Other, "File already exists"))
     }
     let f = OpenOptions::new()
             .create(true)
@@ -47,7 +45,6 @@ pub fn write(path : &String, fcontents: String) -> std::io::Result<()> {
 }
 #[allow(dead_code)]
 pub fn read(path : &String) -> std::io::Result<String> {
-    // let contents = fs::read_to_string("404.html").unwrap();
     let f = OpenOptions::new()
             .read(true)
             .open(&path)?;

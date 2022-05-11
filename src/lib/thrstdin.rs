@@ -6,7 +6,6 @@ use std::sync::mpsc;
 use chrono::{Local};
 use crate::lib::cstmfiles;
 use crate::lib::cstmconfig;
-// use std::time::Duration;
 use std::sync::Mutex;
 use std::sync::Arc;
 
@@ -26,23 +25,15 @@ impl Thr {
     }
 
     pub fn listen_channel(rx: Arc<Mutex<mpsc::Receiver<TcpStream>>>) -> Result<TcpStream, String> {
-        // let mut d : TcpStream;
-
         let (gtx, grx) : (mpsc::Sender<TcpStream>, mpsc::Receiver<TcpStream>) = mpsc::channel();
-
         let tx_clone = gtx.clone();
-        
         thread::spawn(move || {
             let data = rx.lock().unwrap().recv().unwrap();
-            println!("RECIEVED DATA: {:?}", &data);
-            // d = data.try_clone().unwrap();
             tx_clone.send(data).unwrap();
-            // std::thread::sleep(Duration::from_secs(1));
         });
 
         let data = grx.recv().unwrap();
         Ok(data)
-
     }
 
 
@@ -54,7 +45,6 @@ impl Thr {
                 let mtx = mutex_tx.lock().unwrap();
                 println!("Connections sent to other thread!");
                 mtx.lock().unwrap().send(stream).unwrap();
-                // std::thread::sleep(Duration::from_secs(1));
             });
             thr.join().unwrap();
         }).unwrap();
@@ -62,8 +52,6 @@ impl Thr {
 
 
 }
-
-
 
 
 #[allow(dead_code)]
@@ -91,7 +79,6 @@ pub fn init_thread() -> Result<(), String> {
 }
 
 pub fn loop_user_stdin(streams: Vec<TcpStream>, fpath: String) -> Result<(), String> {
-    // let mut response = String::new();
     let mut contents = String::new();
     /*
      * Using scopes guarantees to terminate before the scope exits,
@@ -104,14 +91,6 @@ pub fn loop_user_stdin(streams: Vec<TcpStream>, fpath: String) -> Result<(), Str
                 .expect("Error sending msg!");
 
             let response = format!("{}", contents.trim());
-
-
-
-            // STVAR JE U TOME KAJ JE STREAMS PRAZAN DOK SE PROSLJEDI
-            // TREBALO BI KORISTITI DODATNI THREAD KOJI BUDE SLUSAL NOVE KONEKCIJE
-            // DODATNI THREAD PROSLJEĐUJE (TX,RX) UPDATEANU LISTU KONEKCIJA KOJA SE VRTI U LOOPU
-
-
 
             for mut s in streams.iter() {
 

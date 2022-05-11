@@ -52,21 +52,17 @@ fn build_http_response(buffer: &str) -> Result<(&str,&str,[&str;3],String,String
             http_req = http_request_parsed;
         },
         Err(e) => {
-            let errmsg = format!("Error validating HTTP request: {}", e);
-            println!("{}", errmsg);
-            return Err(errmsg);
+            return Err(format!("Error validating HTTP request: {}", e));
         }
     }
-    //*just for better reading
+
     let req_method = http_req[0];
     let req_route = http_req[1];
 
     match validate_request_method(&req_method) {
         Ok(()) => {},
         Err(e) => {
-            let errmsg = format!("Error validating request method: {}", e);
-            println!("{}", errmsg);
-            return Err(errmsg);
+            return Err(format!("Error validating request method: {}", e));
         }
     }
 
@@ -79,9 +75,7 @@ fn build_http_response(buffer: &str) -> Result<(&str,&str,[&str;3],String,String
     match validate_route(&req_route, routes) {
         Ok(()) => {},
         Err(e) => {
-            let errmsg = format!("Error validating route: {}", e);
-            println!("{}", errmsg);
-            return Err(errmsg);
+            return Err(format!("Error validating route: {}", e));
         }
     }
 
@@ -113,9 +107,7 @@ pub fn respond_html(mut stream: &TcpStream, buffer: &str) -> Result<(), String> 
             view_file = vf;
         },
         Err(e) => {
-            let errmsg = format!("Error building response: {}", e);
-            println!("{}", errmsg);
-            return Err(errmsg);
+            return Err(format!("Error building response: {}", e));
         }
     }
 
@@ -125,6 +117,7 @@ pub fn respond_html(mut stream: &TcpStream, buffer: &str) -> Result<(), String> 
         },
         Err(e) => {
             println!("Error processing request: {}", e);
+            // return error here?
         }
     }
 
@@ -142,7 +135,6 @@ pub fn respond_html(mut stream: &TcpStream, buffer: &str) -> Result<(), String> 
     let headers = headers::fetch_headers(contents_all.len());
     /*
      * HTTP text-based protocol basic response format:
-     * 
      * {HTTP/1.1 200 OK}\r\n
      * {HEADERS}\r\n
      * {CONTENT}
